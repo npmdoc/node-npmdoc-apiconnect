@@ -1,0 +1,177 @@
+<div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a
+
+    >apiconnect (v2.6.2)</a>
+</h1>
+<h4>IBM API Connect Developer Toolkit</h4>
+<div class="apidocSectionDiv"><a
+    href="#apidoc.tableOfContents"
+    id="apidoc.tableOfContents"
+><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.apiconnect">module apiconnect</a><ol>
+
+        <li>
+
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">apiconnect.</span>util</span>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.apiconnect.util">module apiconnect.util</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.apiconnect.util.getConfigDir">
+            function <span class="apidocSignatureSpan">apiconnect.util.</span>getConfigDir
+            <span class="apidocSignatureSpan">(createDir)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.apiconnect.util.rmdir">
+            function <span class="apidocSignatureSpan">apiconnect.util.</span>rmdir
+            <span class="apidocSignatureSpan">(p)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.apiconnect" id="apidoc.module.apiconnect">module apiconnect</a></h1>
+
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.apiconnect.util" id="apidoc.module.apiconnect.util">module apiconnect.util</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.apiconnect.util.getConfigDir" id="apidoc.element.apiconnect.util.getConfigDir">
+        function <span class="apidocSignatureSpan">apiconnect.util.</span>getConfigDir
+        <span class="apidocSignatureSpan">(createDir)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function getConfigDir(createDir) {
+  if (typeof createDir === &#x27;undefined&#x27;) {
+    createDir = true;
+  }
+  var os = require(&#x27;os&#x27;);
+  var path = require(&#x27;path&#x27;);
+  var env = process.env;
+  var home = env.HOME;
+  var user = env.LOGNAME || env.USER || env.LNAME || env.USERNAME;
+  var homedir;
+  if (process.platform === &#x27;win32&#x27;) {
+    homedir = env.USERPROFILE || env.HOMEDRIVE + env.HOMEPATH || home || null;
+  }
+  if (process.platform === &#x27;darwin&#x27;) {
+    homedir = home || (user ? &#x27;/Users/&#x27; + user : null);
+  }
+  if (process.platform === &#x27;linux&#x27;) {
+    homedir = home || (process.getuid() === 0 ? &#x27;/root&#x27; : (user ? &#x27;/home/&#x27; + user : null));
+  }
+  var userDir = typeof os.homedir === &#x27;function&#x27; ? os.homedir() : homedir;
+  process.env.APIC_CLI_CONFIG_DIR = process.env.APIC_CLI_CONFIG_DIR || &#x27;.apiconnect&#x27;;
+  var configDir = process.env.APIC_CONFIG_PATH || path.resolve(userDir, process.env.APIC_CLI_CONFIG_DIR);
+  if (createDir) {
+    var mkdirp = require(&#x27;mkdirp&#x27;);
+    mkdirp.sync(configDir);
+  }
+  return configDir;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.apiconnect.util.rmdir" id="apidoc.element.apiconnect.util.rmdir">
+        function <span class="apidocSignatureSpan">apiconnect.util.</span>rmdir
+        <span class="apidocSignatureSpan">(p)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function rmdir(p) {
+  var files = [];
+  fs.accessSync(p, fs.F_OK);
+  files = fs.readdirSync(p);
+  files.forEach(function(file, index) {
+    var cp = p + &#x27;/&#x27; + file;
+    if (fs.lstatSync(cp).isDirectory()) {
+      rmdir(cp);
+    } else {
+      fs.unlinkSync(cp);
+    }
+  });
+  fs.rmdirSync(p);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
